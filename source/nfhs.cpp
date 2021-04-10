@@ -13,41 +13,50 @@
 //   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
 
 #include "pch.h"
+
 #include "crow.h"
 #include "crow/utility.h"
+#include "opencv2/core.hpp"
+#include "opencv2/highgui.hpp"
+#include "opencv2/imgcodecs.hpp"
+#include "opencv2/imgproc.hpp"
 
-int main(const std::vector<std::string>& args)
+#include "Encrypt/base64.h"
+
+int main(int argc, char argv[])
 {
-	/*	crow\examples
-		some of the example using `crow::SimpleApp`.
-		but when Debug, the breakpoint inside lambda function is never invoked. I don't know what's wrong there,
-		either my PC's connection port, proxy, or something I don't know
-	*/
-
 	crow::SimpleApp app;
 
-	CROW_ROUTE(app, "/resize_image").methods("POST"_method)([](const crow::request& req)
+	//CROW_ROUTE(app, "/resize_image").methods("GET"_method, "POST"_method)([](const crow::request& req)
+	CROW_ROUTE(app, "/").methods("GET"_method, "POST"_method)([](const crow::request& req)
 		{
-			/*	this lambda body is never called. This log is only have in every build.
-				I've getting stuck and didn't get any solution yet
-				---
-				(2021-04-10 08:51:18) [INFO    ] Crow/0.1 server is running at 0.0.0.0:8080 using 6 threads
-				(2021-04-10 08:51:18) [INFO    ] Call `app.loglevel(crow::LogLevel::Warning)` to hide Info level logs.
-			*/
+			crow::json::rvalue input = crow::json::load(req.body);
 
-			crow::json::rvalue rres = crow::json::load(req.body);
-			crow::json::wvalue wres;
+			string	img_str64 = input["input_jpeg"].s();
+			string	img_dec64 = decode64(img_str64);
+			
+			vector<uchar>	img_data(img_dec64.begin(), img_dec64.end());
+			cv::Mat			img_mat = cv::imdecode(img_data, cv::IMREAD_UNCHANGED);
 
-			// to do : resize image using opencv
+			int newWidth = (int)input["desired_width"];
+			int newHeight = (int)input["desired_height"];
 
-			wres["code"] = 200;
-			wres["message"] = "success";
+			cv::resize(img_mat, img_mat, cv::Size(newWidth, newHeight));
 
-			ostringstream os;
-			os << crow::json::dump(wres);
-			return crow::response{ os.str() };
+			vector<uchar> img_out;
+			cv::imencode(".jpg", img_mat, img_out);
+
+			string img_enc64 = encode64(string(img_out.begin(), img_out.end()));
+
+			crow::json::wvalue result;
+			result["code"] = 200;
+			result["message"] = "success";
+			result["output_jpeg"] = img_enc64;
+
+			return crow::response{ std::string(crow::json::dump(result)) };
 		});
 
+	app.loglevel(crow::LogLevel::Debug);
 	app.port(8080).multithreaded().run();
 
 	return EXIT_SUCCESS;

@@ -9,6 +9,12 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
+    <Filter Include="source\Encrypt">
+      <UniqueIdentifier>{513ffb0c-cebe-4e44-ba87-a4d6d4f7b3d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Encrypt">
+      <UniqueIdentifier>{c718f2f6-f2fe-4eb7-aa2a-4da2079b5e72}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\nfhs.cpp">
@@ -20,7 +26,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\pch.h">
-      <Filter>source</Filter>
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
