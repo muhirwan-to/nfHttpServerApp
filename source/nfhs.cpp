@@ -13,27 +13,29 @@
 //   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
 
 #include "pch.h"
+#include "crow.h"
+#include "crow/utility.h"
 
 int main(const std::vector<std::string>& args)
 {
-	//Port to listen
-	Poco::UInt16 port = 9999;
+	crow::SimpleApp app;
 
-	Poco::Net::ServerSocket socket(port);
+	CROW_ROUTE(app, "/resize_image").methods("POST"_method)([](const crow::request& req)
+		{
+			crow::json::rvalue rres = crow::json::load(req.body);
+			crow::json::wvalue wres;
 
-	Poco::Net::HTTPServerParams* pParams = new Poco::Net::HTTPServerParams();
-	//Sets the maximum number of queued connections.
-	pParams->setMaxQueued(100);
-	//Sets the maximum number of simultaneous threads available for this Server
-	pParams->setMaxThreads(16);
-	// Instanciate HandlerFactory
-	Poco::Net::HTTPServer server(new HandlerFactory(), socket, pParams);
+			// to do
 
-	server.start();
+			wres["code"] = 200;
+			wres["message"] = "success";
 
-	waitForTerminationRequest();
+			ostringstream os;
+			os << crow::json::dump(wres);
+			return crow::response{ os.str() };
+		});
 
-	server.stop();
+	app.port(8080).multithreaded().run();
 
-	return EXIT_OK;
+	return EXIT_SUCCESS;
 }

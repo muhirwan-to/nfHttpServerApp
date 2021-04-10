@@ -1,0 +1,22 @@
+Index: include/crow/socket_adaptors.h
+===================================================================
+--- include/crow/socket_adaptors.h	(revision 379)
++++ include/crow/socket_adaptors.h	(working copy)
+@@ -19,7 +19,7 @@
+ 
+         boost::asio::io_service& get_io_service()
+         {
+-            return socket_.get_io_service();
++			return (boost::asio::io_service&)socket_.get_executor().context();
+         }
+ 
+         tcp::socket& raw_socket()
+@@ -94,7 +94,7 @@
+ 
+         boost::asio::io_service& get_io_service()
+         {
+-            return raw_socket().get_io_service();
++			return (boost::asio::io_service&)raw_socket().get_executor().context();
+         }
+ 
+         template <typename F> 
