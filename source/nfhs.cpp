@@ -18,14 +18,27 @@
 
 int main(const std::vector<std::string>& args)
 {
+	/*	crow\examples
+		some of the example using `crow::SimpleApp`.
+		but when Debug, the breakpoint inside lambda function is never invoked. I don't know what's wrong there,
+		either my PC's connection port, proxy, or something I don't know
+	*/
+
 	crow::SimpleApp app;
 
 	CROW_ROUTE(app, "/resize_image").methods("POST"_method)([](const crow::request& req)
 		{
+			/*	this lambda body is never called. This log is only have in every build.
+				I've getting stuck and didn't get any solution yet
+				---
+				(2021-04-10 08:51:18) [INFO    ] Crow/0.1 server is running at 0.0.0.0:8080 using 6 threads
+				(2021-04-10 08:51:18) [INFO    ] Call `app.loglevel(crow::LogLevel::Warning)` to hide Info level logs.
+			*/
+
 			crow::json::rvalue rres = crow::json::load(req.body);
 			crow::json::wvalue wres;
 
-			// to do
+			// to do : resize image using opencv
 
 			wres["code"] = 200;
 			wres["message"] = "success";
