@@ -1,0 +1,1 @@
+please call ..\make_all.bat at least once to download the externals
