@@ -23,10 +23,16 @@
     <ClCompile Include="..\source\pch.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\Encrypt\base64.cpp">
+      <Filter>source\Encrypt</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\pch.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Encrypt\base64.h">
+      <Filter>include\Encrypt</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
