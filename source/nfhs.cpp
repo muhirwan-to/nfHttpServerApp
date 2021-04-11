@@ -23,6 +23,15 @@
 
 #include "Encrypt/base64.h"
 
+/*	There's unresolved symbol on opencv, What I've trying to fix this:
+	- Add `Linker -> General -> Additional Library Directories` to `.dll path`
+	- Use `opencv` from github and build use cmake.
+		-> From cmake, we have vcxproj for each `\modules`
+		-> I've trying to add each project (based on #include above)
+		-> Another linker error has coming from opencv projects I have added
+*/
+
+
 int main(int argc, char argv[])
 {
 	crow::SimpleApp app;
